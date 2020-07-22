@@ -10,8 +10,13 @@ int main(int argc, char *argv[])
     // once program is loaded with max array, take in argument gievn at the start for allocation. store the allocation data. 
     //respond with a paramer as, create cases for 4 inputs from assingment example
     return (0); 
+
+    //chamnge to test b
 } 
 
+int test(){
+    //show test 
+}
 
 //may not need to use, checking with prof
 int create_maximum_array(){
