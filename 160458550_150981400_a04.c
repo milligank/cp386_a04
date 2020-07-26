@@ -1,10 +1,24 @@
 #include <stdio.h> 
+#include <stdlib.h>
 
-int** array;
+int** max_array;
+
 int main(int argc, char *argv[]) 
 { 
-    //create_maximum_array();
-    //run_bankers()
+    int n = 5;
+    
+    printf("Number of Customers: %d\n", n); // would like to dynamically get this data but am lazy
+    printf("Currently available resources:");
+    for(int k = 1; k < argc; k++)
+         printf("%s ", argv[k]);
+    printf("\nMaximum resources from file: \n");
+    create_maximum_array();
+
+    printf("Enter a command: ");
+    //scanf("%d", &testInteger); 
+
+    //run_bankers(max_array);
+    //int available = argv;
 
     // use create maximum array to parse sample in file to create max matrix
     // once program is loaded with max array, take in argument gievn at the start for allocation. store the allocation data. 
@@ -13,14 +27,12 @@ int main(int argc, char *argv[])
 } 
 
 
-//may not need to use, checking with prof
 int create_maximum_array(){
-    //max[amount of rows][length of rows]
-    
+
     int n = 5;
 
-	array = malloc(n * sizeof(*array)); /* Assuming `n` is the number of rows */
-	if(!array) /* If `malloc` failed */
+	max_array = malloc(n * sizeof(*max_array)); /* Assuming `n` is the number of rows */
+	if(!max_array) /* If `malloc` failed */
 	{
 	    fputs(stderr, "Error");
 	    exit(-1);
@@ -29,14 +41,14 @@ int create_maximum_array(){
 	int count = 1;
 	for(int i = 0; i < n; i++)
 	{
-	    array[i] = malloc(count * sizeof(**array));
-	    if(!array[i]) /* If `malloc` failed */
+	    max_array[i] = malloc(count * sizeof(**max_array));
+	    if(!max_array[i]) /* If `malloc` failed */
 	    {
 	        for(int j = 0; j < i; j++) /* free previously allocated memory */
 	        {
-	            free(array[j]); 
+	            free(max_array[j]); 
 	        }
-	        free(array);
+	        free(max_array);
 
 	        fputs(stderr, "Error");
 	        exit(-1);
@@ -51,45 +63,47 @@ int create_maximum_array(){
 	{
 	   for(int i = 0; i < n; i++) /* free previously allocated memory */
 	   {
-	      free(array[i]); 
+	      free(max_array[i]); 
 	   }
-	   free(array);
+	   free(max_array);
 
 	   fputs(stderr, "Error");
 	   exit(-1);
 	}
 
-	int max = 1;
+	int max = 4;
 
 	for(int i = 0; i < n; i++)
 	{
 	    for(count = 0; count < max; count++)
 	    {
-	        fscanf(fp, "%d", &array[i][count]);
+	        fscanf(fp, "%d,", &max_array[i][count]);
+           
 	    }
-	    max++;
+	    
+        
 	}
 
 	// Then print the results:
 
-	max = 1;
+	max = 4;
 
 	for(int i = 0; i < n; i++)
 	{
 	    for(count = 0; count < max; count++)
 	    {
-	        printf("array[%d][%d] = %d", i, count, array[i][count]);
+	        printf("%d,",max_array[i][count]);
 	    }
-	    max++;
+        printf("\n");
 	}
 
 	// And finally, free the allocated memory:
 
 	for(int i = 0; i < n; i++)
 	{
-	   free(array[i]); 
+	   free(max_array[i]); 
 	}
-	free(array);
+	free(max_array);
     return 0;
 }
 
