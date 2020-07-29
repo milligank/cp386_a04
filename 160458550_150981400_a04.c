@@ -1,10 +1,71 @@
 #include <stdio.h> 
+#include <stdlib.h>
+#include <string.h>
 
-int** array;
+
+void create_maximum_array();
+int** max_array;
+int available[50];
+int **allocation;
+
 int main(int argc, char *argv[]) 
 { 
-    //create_maximum_array();
-    //run_bankers()
+    int n = 5;
+    
+    printf("Number of Customers: %d\n", n); // would like to dynamically get this data but am lazy
+    printf("Currently available resources:");
+    for(int k = 1; k < argc; k++){
+        int int_val = atoi(argv[k]);
+        available[k] = int_val;
+        printf("%d ", available[k]); 
+    }
+
+    printf("\nMaximum resources from file: \n");
+    create_maximum_array();
+    
+    char word[100];
+    int l = 5;
+    allocation = malloc(l * sizeof(*allocation));
+
+    do {
+        printf("Enter Request: ");
+        /* read from stdin 
+        note the `sizeof char`, if you need to change the size of `word`,
+        you won't have to change this line. */
+        fgets(word, sizeof word, stdin);
+
+        /* initialize parser */
+        char *token = strtok(word, " ");
+        // loop through the string to extract all other tokens
+        char *input_string[200];
+        char rq[15] = "RQ";
+        int i = 0;
+        while( token != NULL ) {
+            input_string[i] = token;//printing each token
+            token = strtok(NULL, " ");
+            i += 1;
+        }
+        int length_string = i;
+        i = 0;
+
+        char comm[20];
+        strcpy(comm,input_string[0]);
+        int rq_row = 0;
+        if (strcmp(comm, rq) == 0){
+            if (rq_row > 4){
+                printf("Allocation array cannot be larger than Max");
+                continue;
+            }
+            for (int x = 1; x < length_string; x++){
+                allocation[rq_row][x] = atoi(input_string[x]);
+                printf("%d \n", allocation[rq_row][x]);
+            }
+            rq_row += 1;
+        }
+    } while (strcmp(word,"EXIT") !=0);
+
+    //run_bankers(max_array);
+    //int available = argv;
 
     // use create maximum array to parse sample in file to create max matrix
     // once program is loaded with max array, take in argument gievn at the start for allocation. store the allocation data. 
@@ -18,84 +79,49 @@ int test(){
     //show test 
 }
 
-//may not need to use, checking with prof
-int create_maximum_array(){
-    //max[amount of rows][length of rows]
-    
+void create_maximum_array(){
+
     int n = 5;
 
-	array = malloc(n * sizeof(*array)); /* Assuming `n` is the number of rows */
-	if(!array) /* If `malloc` failed */
-	{
-	    fputs(stderr, "Error");
-	    exit(-1);
-	}
-
+	max_array = malloc(n * sizeof(*max_array)); /* Assuming `n` is the number of rows */
+	
 	int count = 1;
 	for(int i = 0; i < n; i++)
 	{
-	    array[i] = malloc(count * sizeof(**array));
-	    if(!array[i]) /* If `malloc` failed */
-	    {
-	        for(int j = 0; j < i; j++) /* free previously allocated memory */
-	        {
-	            free(array[j]); 
-	        }
-	        free(array);
-
-	        fputs(stderr, "Error");
-	        exit(-1);
-	    }
+	    max_array[i] = malloc(count * sizeof(**max_array));
 	    count++;
 	}
 
-	// Then, read data from the file into the array by using:
-
 	FILE* fp = fopen("sample4_in.txt", "r");
-	if(!fp)
-	{
-	   for(int i = 0; i < n; i++) /* free previously allocated memory */
-	   {
-	      free(array[i]); 
-	   }
-	   free(array);
 
-	   fputs(stderr, "Error");
-	   exit(-1);
-	}
-
-	int max = 1;
+	int max = 4;
 
 	for(int i = 0; i < n; i++)
 	{
 	    for(count = 0; count < max; count++)
 	    {
-	        fscanf(fp, "%d", &array[i][count]);
+	        fscanf(fp, "%d,", &max_array[i][count]);
+           
 	    }
-	    max++;
+        
 	}
 
-	// Then print the results:
-
-	max = 1;
+	max = 4;
 
 	for(int i = 0; i < n; i++)
 	{
 	    for(count = 0; count < max; count++)
 	    {
-	        printf("array[%d][%d] = %d", i, count, array[i][count]);
+	        printf("%d,",max_array[i][count]);
 	    }
-	    max++;
+        printf("\n");
 	}
-
-	// And finally, free the allocated memory:
 
 	for(int i = 0; i < n; i++)
 	{
-	   free(array[i]); 
+	   free(max_array[i]); 
 	}
-	free(array);
-    return 0;
+	free(max_array);
 }
 
 int run_bankers(int m, int n, int alloc[n][m], int max[n][m], int avail[m]){
