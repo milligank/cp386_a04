@@ -2,11 +2,17 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define INPUTFILE "sample4_in.txt"
+#define MAXCLIENTS 5
+#define MAXCOL 4
+
 
 void create_maximum_array();
-int** max_array;
+//int run_bankersrun_bankers(MAXCLIENTS, MAXCOL, int alloc[MAXCLIENTS][MAXCOL], int max[MAXCLIENTS][MAXCOL], int avail[MAXCOL]);
+int max_array[MAXCLIENTS][MAXCOL];
 int available[50];
-int **allocation;
+//int **allocation;
+int allocation[MAXCLIENTS][MAXCOL];
 
 int main(int argc, char *argv[]) 
 { 
@@ -23,46 +29,83 @@ int main(int argc, char *argv[])
     printf("\nMaximum resources from file: \n");
     create_maximum_array();
     
-    char word[100];
-    int l = 5;
-    allocation = malloc(l * sizeof(*allocation));
+    char word[200];
+    char comm[200];
+    char rq[200] = "RQ";
+    char rl[200] = "RL";
+    char star[200] = "*";
+    char run[200] = "run";
+    char exit_str[200] = "exit";
 
-    do {
-        printf("Enter Request: ");
-        /* read from stdin 
-        note the `sizeof char`, if you need to change the size of `word`,
-        you won't have to change this line. */
-        fgets(word, sizeof word, stdin);
+    printf("Enter Request: ");
+    fgets(word, sizeof word, stdin);
+    strcpy(comm,word);
+    int start = 0;
+
+    while (strcmp(comm, exit_str) !=0) {
+        if (start > 0){
+            printf("Enter Request: ");
+            fgets(word, sizeof word, stdin);
+            strcpy(comm, word);
+        }
+        int total_words = 0;
+        for(int w = 0; comm[w] != '\0'; w++)
+        {
+            if(comm[w] == ' ' || comm[w] == '\n' || comm[w] == '\t')
+            {
+                total_words+=1;	
+            } 
+        }	
 
         /* initialize parser */
-        char *token = strtok(word, " ");
+        char *token = strtok(comm, " ");
         // loop through the string to extract all other tokens
         char *input_string[200];
-        char rq[15] = "RQ";
+        
         int i = 0;
-        while( token != NULL ) {
-            input_string[i] = token;//printing each token
-            token = strtok(NULL, " ");
-            i += 1;
+        if (total_words > 1 ){
+            while( token != NULL && i <= MAXCLIENTS) {
+                input_string[i] = token;//printing each token
+                token = strtok(NULL, " ");
+                i += 1;
+            }
+        }
+        else{
+            strcpy(input_string[0], comm);
         }
         int length_string = i;
         i = 0;
-
-        char comm[20];
-        strcpy(comm,input_string[0]);
-        int rq_row = 0;
-        if (strcmp(comm, rq) == 0){
-            if (rq_row > 4){
-                printf("Allocation array cannot be larger than Max");
+        
+        //strcpy(comm,input_string[0]);
+        if (strcmp(input_string[0], rq) == 0){
+            if (atoi(input_string[1]) >= MAXCLIENTS){
+                printf("Allocation array cannot be larger than Max \n");
                 continue;
             }
-            for (int x = 1; x < length_string; x++){
-                allocation[rq_row][x] = atoi(input_string[x]);
-                printf("%d \n", allocation[rq_row][x]);
+            for (int x = 2; x < (length_string); x++){
+                allocation[atoi(input_string[1])][x] = atoi(input_string[x]);
             }
-            rq_row += 1;
         }
-    } while (strcmp(word,"EXIT") !=0);
+
+        if (strcmp(input_string[0], rl) == 0) {
+            printf("Got the RL command\n");
+
+        } 
+
+        if (strcmp(input_string[0], star) == 0) {
+            printf("Got the star command\n");
+
+        } 
+
+        if (strcmp(input_string[0], run) == 0) {
+            printf("Got the run command\n");
+            int response = run_bankers(MAXCOL, MAXCLIENTS, allocation, max_array, available);
+
+        }
+
+        start += 1;
+
+    } 
 
     //run_bankers(max_array);
     //int available = argv;
@@ -80,25 +123,13 @@ int test(){
 }
 
 void create_maximum_array(){
+    int count;
 
-    int n = 5;
+	FILE* fp = fopen(INPUTFILE, "r");
 
-	max_array = malloc(n * sizeof(*max_array)); /* Assuming `n` is the number of rows */
-	
-	int count = 1;
-	for(int i = 0; i < n; i++)
+	for(int i = 0; i < MAXCLIENTS; i++)
 	{
-	    max_array[i] = malloc(count * sizeof(**max_array));
-	    count++;
-	}
-
-	FILE* fp = fopen("sample4_in.txt", "r");
-
-	int max = 4;
-
-	for(int i = 0; i < n; i++)
-	{
-	    for(count = 0; count < max; count++)
+	    for(count = 0; count < MAXCOL; count++)
 	    {
 	        fscanf(fp, "%d,", &max_array[i][count]);
            
@@ -106,22 +137,14 @@ void create_maximum_array(){
         
 	}
 
-	max = 4;
-
-	for(int i = 0; i < n; i++)
+	for(int i = 0; i < MAXCLIENTS; i++)
 	{
-	    for(count = 0; count < max; count++)
+	    for(count = 0; count < MAXCOL; count++)
 	    {
-	        printf("%d,",max_array[i][count]);
+	        printf("%d ",max_array[i][count]);
 	    }
         printf("\n");
 	}
-
-	for(int i = 0; i < n; i++)
-	{
-	   free(max_array[i]); 
-	}
-	free(max_array);
 }
 
 int run_bankers(int m, int n, int alloc[n][m], int max[n][m], int avail[m]){
@@ -159,10 +182,10 @@ int run_bankers(int m, int n, int alloc[n][m], int max[n][m], int avail[m]){
         } 
     } 
   
-    printf("Following is the SAFE Sequence\n"); 
+    printf("Safe Sequence is: < "); 
     for (i = 0; i < n - 1; i++) 
-        printf(" P%d ->", ans[i]); 
-    printf(" P%d", ans[n - 1]); 
+        printf("%d ", ans[i]); 
+    printf("%d>\n", ans[n - 1]); 
   
     return (0); 
 }
