@@ -1,11 +1,17 @@
 # cp386_a04
 4th assignment for CP386
 
-to begin, set makefile4 in as MaKeFile, and run as ./Assignment_4 with the 4 inputs for the available array (same as assignemnt description)
+# Instructions
 
-when running enter in either RQ followed by 4 values, RL followed by 4, * or Run
+Import sample4_in.txt to location you are stored the c file in. Leave file name as is.
 
-if EXIX is enetered program will exit, or use ctl+c
+Import makefile4, and rename as MaKeFile
 
-make sure to import the smaple_in.txt file to the location you are running a4 from, the code picks up the file from there
+call the makefile, and run assignment as: ./Assignment_4, with the 4 inputs for the available array (same as assignment description)
+
+When running enter in either RQ followed by 5 values, RL followed by 5 values, * or run, or exit to leave program
+
+If RL or RQ is entered, and the first thread or process value has already been requested, it will overwrite that request. Ie P0  = 1 2 3 4 if RQ 0 8 3 1 3 is entered, P0 will be 8 3 1 3
+
+There must be at thease 1 RQ submitted before * can be called
 
