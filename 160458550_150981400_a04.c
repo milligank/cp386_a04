@@ -188,14 +188,17 @@ int main(int argc, char *argv[])
             if (response != 0)
             {
                 printf("No safe sequence found\n");
+                return(-1);
             }
             printf("Sequence found. %d\n", response);
             //for thread in threads:RQ
             for (int w = 0; w < MAXCLIENTS; w++)
             {
-                printf("%d\n", ans[w]);
+                int index = ans[w];
+                printf("%d\n", index);
                 pthread_t tid;
-                pthread_create(&tid, NULL, threadRun, &ans[w]);
+                
+                pthread_create(&tid, NULL, threadRun, &index);
                 pthread_join(tid, NULL);
             }
         }
@@ -217,16 +220,36 @@ int test()
 //thread run
 void *threadRun(void *p)
 {
+    int i;
     // max array that each process can take
     // allocated array @ [0], needed array[0], availble
     sleep(1);
-    printf("-->Customer/Thread id:%s\n", (char *)p);
-    printf("\tNeeded:\n");
-    printf("\tAvailable:\n");
+    int *client = (int *)p;
+    printf("-->Customer/Thread id:%d\n", *client);
+    printf("\tAllocated Resources:");
+    for (i=0; i< MAXCOL; i++){
+        printf("%d ", allocation[*client][i]);
+    }
+    printf("\n");
+    printf("\tNeeded:");
+    for (i=0; i< MAXCOL; i++){
+        printf("%d ", need[*client][i]);
+    }
+    printf("\n");
+    printf("\tAvailable:");
+    for (i=0; i< MAXCOL; i++){
+        printf("%d ", available[i]);
+    }
+    printf("\n");
     printf("\tThread has started\n");
     printf("\tThread has finished\n");
     printf("\tThread is realeasing resources\n");
-    printf("\tNew Available:\n");
+    printf("\tNew Available:");
+    for (i=0; i< MAXCOL; i++){
+        available[i] =  available[i] + allocation[*client][i];
+        printf("%d ", available[i]);
+    }
+    printf("\n");
     return NULL;
 }
 //This function will take info from input file
