@@ -1,3 +1,15 @@
+/*
+Names:
+Kathleen Milligan 160458550
+Git: milligank
+Jacob Hessian 150981400
+Git: JakeHessian
+
+Project link:
+https://github.com/milligank/cp386_a04
+*/
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
