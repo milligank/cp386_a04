@@ -21,7 +21,7 @@ Instructions:
 
 6. There must be at thease 1 RQ submitted before \* can be called
 
-Motivation: To learn more operating systems
+Motivation: To learn more about operating systems
 
 Screenshots:
 
@@ -32,7 +32,7 @@ Jake: RL function, \* function, Run function (thread runs)
 
 Features : ?
 
-Test : show some screenshops
+Test: show some screenshops
 
 Code Example : attach some code
 
@@ -40,5 +40,5 @@ Authors:
 Katie Milligan 160458550
 Jacob Hessian 150981400
 
-Credits : ?
-License : ?
+Credits: See authors
+License: MIT license
