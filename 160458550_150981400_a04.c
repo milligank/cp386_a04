@@ -9,7 +9,7 @@
 #define MAXCLIENTS 5
 #define MAXCOL 4
 
-void threadRun(void *p);
+void *threadRun(void *p);
 void create_maximum_array();
 int run_bankers(int, int, int alloc[MAXCLIENTS][MAXCOL], int max[MAXCLIENTS][MAXCOL], int avail[MAXCOL], int need[MAXCLIENTS][MAXCOL]);
 void get_need_array(int, int, int alloc[MAXCLIENTS][MAXCOL], int max[MAXCLIENTS][MAXCOL]);
@@ -192,8 +192,12 @@ int main(int argc, char *argv[])
             }
             printf("Sequence found. %d\n", response);
             //for thread in threads:
-            pthread_create(&thread_id, NULL, threadRun, NULL);
-            pthread_join(thread_id, NULL);
+            for (i = 0; i < MAXCLIENTS; i++)
+            {
+                pthread_t i;
+                pthread_create(&i, NULL, threadRun, NULL);
+                pthread_join(i, NULL);
+            }
         }
 
         start += 1;
@@ -211,15 +215,15 @@ int test()
 }
 
 //thread run
-void threadRun(void *p)
+void *threadRun(void *p)
 {
     // max array that each process can take
     // allocated array @ [0], needed array[0], availble
     sleep(1);
-    printf("-->Customer/Thread\n");
+    printf("-->Customer/Thread id:%lu\n", pthread_self());
     printf("\tNeeded:\n");
-    pritnf("\tAvailable:\n");
-    pritnf("\tThread has started\n");
+    printf("\tAvailable:\n");
+    printf("\tThread has started\n");
     printf("\tThread has finished\n");
     printf("\tThread is realeasing resources\n");
     printf("\tNew Available:\n");
