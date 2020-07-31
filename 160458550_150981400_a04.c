@@ -17,11 +17,10 @@ int max_array[MAXCLIENTS][MAXCOL];
 int available[MAXCLIENTS];
 int need[MAXCLIENTS][MAXCOL];
 int allocation[MAXCLIENTS][MAXCOL]; //allocation of clients 2d array
-
+int ans[MAXCLIENTS];
 int main(int argc, char *argv[])
 {
     int n = 5;
-
     //print number of customers
     printf("Number of Customers: %d\n", n);
     //print currently available resources
@@ -191,12 +190,13 @@ int main(int argc, char *argv[])
                 printf("No safe sequence found\n");
             }
             printf("Sequence found. %d\n", response);
-            //for thread in threads:
-            for (i = 0; i < MAXCLIENTS; i++)
+            //for thread in threads:RQ
+            for (int w = 0; w < MAXCLIENTS; w++)
             {
-                pthread_t i;
-                pthread_create(&i, NULL, threadRun, NULL);
-                pthread_join(i, NULL);
+                printf("%d\n", ans[w]);
+                pthread_t tid;
+                pthread_create(&tid, NULL, threadRun, &ans[w]);
+                pthread_join(tid, NULL);
             }
         }
 
@@ -220,7 +220,7 @@ void *threadRun(void *p)
     // max array that each process can take
     // allocated array @ [0], needed array[0], availble
     sleep(1);
-    printf("-->Customer/Thread id:%lu\n", pthread_self());
+    printf("-->Customer/Thread id:%s\n", (char *)p);
     printf("\tNeeded:\n");
     printf("\tAvailable:\n");
     printf("\tThread has started\n");
@@ -274,7 +274,7 @@ int run_bankers(int m, int n, int allocation[n][m], int max[n][m], int available
     int i, j, k;
     int safe = 1;
 
-    int f[n], ans[n], ind = 0;
+    int f[n], ind = 0;
     for (k = 0; k < n; k++)
     {
         f[k] = 0;
